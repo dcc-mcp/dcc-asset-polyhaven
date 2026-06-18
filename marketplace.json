@@ -1,0 +1,29 @@
+{
+  "version": "1",
+  "entries": [
+    {
+      "name": "dcc-asset-polyhaven",
+      "description": "Browse and download CC0 Poly Haven models, HDRIs, and textures",
+      "dcc": [
+        "maya",
+        "blender",
+        "houdini",
+        "3dsmax",
+        "photoshop"
+      ],
+      "tags": [
+        "asset",
+        "polyhaven",
+        "cc0",
+        "download"
+      ],
+      "version": "0.1.0",
+      "install": {
+        "type": "git",
+        "url": "https://github.com/dcc-mcp/dcc-asset-polyhaven",
+        "ref": "main"
+      }
+    }
+  ]
+}
+

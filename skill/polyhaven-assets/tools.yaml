@@ -1,0 +1,84 @@
+tools:
+  - name: search_polyhaven_assets
+    description: Search Poly Haven assets by type and text.
+    source_file: scripts/search_polyhaven_assets.py
+    execution: sync
+    affinity: any
+    timeout_hint_secs: 20
+    enforce_thread_affinity: true
+    annotations:
+      read_only_hint: true
+      idempotent_hint: true
+      open_world_hint: true
+    group: polyhaven
+    input_schema:
+      type: object
+      properties:
+        query:
+          type: string
+        asset_type:
+          type: string
+          enum: ["models", "hdris", "textures", "all"]
+          default: "models"
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 50
+          default: 10
+    output_schema:
+      type: object
+
+  - name: list_polyhaven_files
+    description: List downloadable files for a Poly Haven asset.
+    source_file: scripts/list_polyhaven_files.py
+    execution: sync
+    affinity: any
+    timeout_hint_secs: 20
+    enforce_thread_affinity: true
+    annotations:
+      read_only_hint: true
+      idempotent_hint: true
+      open_world_hint: true
+    group: polyhaven
+    input_schema:
+      type: object
+      required: ["asset_id"]
+      properties:
+        asset_id:
+          type: string
+    output_schema:
+      type: object
+
+  - name: download_polyhaven_asset
+    description: Download one Poly Haven file variant and optional dependencies.
+    source_file: scripts/download_polyhaven_asset.py
+    execution: sync
+    affinity: any
+    timeout_hint_secs: 180
+    enforce_thread_affinity: true
+    annotations:
+      read_only_hint: false
+      destructive_hint: false
+      idempotent_hint: false
+      open_world_hint: true
+    group: polyhaven
+    input_schema:
+      type: object
+      required: ["asset_id", "output_dir"]
+      properties:
+        asset_id:
+          type: string
+        output_dir:
+          type: string
+        file_type:
+          type: string
+          default: "gltf"
+        resolution:
+          type: string
+          default: "2k"
+        include_dependencies:
+          type: boolean
+          default: true
+    output_schema:
+      type: object
+
