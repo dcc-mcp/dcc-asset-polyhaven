@@ -27,6 +27,14 @@ def validate_skill() -> None:
     assert not report.has_errors, report
 
 
+def descriptor_smoke() -> None:
+    downloader = load("download_polyhaven_asset")
+    descriptor = downloader.asset_descriptor("ArmChair_01", "/tmp/chair.gltf", ["/tmp/chair.bin"])
+    assert descriptor["variants"][0]["local_path"] == "/tmp/chair.gltf"
+    assert descriptor["attribution"]["license_spdx"] == "CC0-1.0"
+    assert descriptor["extra"]["dependencies"] == ["/tmp/chair.bin"]
+
+
 def live_polyhaven_smoke() -> None:
     if os.environ.get("RUN_LIVE_API_SMOKE") != "true":
         print("skip live Poly Haven API smoke")
@@ -41,9 +49,9 @@ def live_polyhaven_smoke() -> None:
 
 def main() -> None:
     validate_skill()
+    descriptor_smoke()
     live_polyhaven_smoke()
 
 
 if __name__ == "__main__":
     main()
-
