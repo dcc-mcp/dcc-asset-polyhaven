@@ -4,6 +4,7 @@ import importlib.util
 import os
 import sys
 from pathlib import Path
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -35,6 +36,17 @@ def descriptor_smoke() -> None:
     assert descriptor["extra"]["dependencies"] == ["/tmp/chair.bin"]
 
 
+def hdri_download_smoke() -> None:
+    downloader = load("download_polyhaven_asset")
+    files = {"hdri": {"1k": {"hdr": {"url": "https://example.test/studio_1k.hdr"}}}}
+    with patch.object(downloader, "api", return_value=files), patch.object(
+        downloader, "fetch", return_value="/tmp/studio_1k.hdr"
+    ):
+        result = downloader.main(asset_id="studio", output_dir="/tmp", file_type="hdr", resolution="1k")
+    assert result["success"], result
+    assert result["context"]["asset_descriptor"]["variants"][0]["format"] == "hdr"
+
+
 def live_polyhaven_smoke() -> None:
     if os.environ.get("RUN_LIVE_API_SMOKE") != "true":
         print("skip live Poly Haven API smoke")
@@ -50,6 +62,7 @@ def live_polyhaven_smoke() -> None:
 def main() -> None:
     validate_skill()
     descriptor_smoke()
+    hdri_download_smoke()
     live_polyhaven_smoke()
 
 
