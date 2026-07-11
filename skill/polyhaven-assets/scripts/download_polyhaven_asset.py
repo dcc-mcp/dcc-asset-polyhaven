@@ -41,7 +41,8 @@ def main(
 ) -> dict[str, Any]:
     try:
         data = api(f"/files/{asset_id}")
-        variant = ((data.get(file_type) or {}).get(resolution) or {}).get(file_type)
+        variants = data.get("hdri") if file_type in {"hdr", "exr"} else data.get(file_type)
+        variant = ((variants or {}).get(resolution) or {}).get(file_type)
         if not variant:
             return skill_error("Poly Haven variant not found", f"{asset_id} {file_type} {resolution}", raw=data)
 
